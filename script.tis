@@ -1,0 +1,103 @@
+const DEBUGGING = false;
+
+DEBUGGING && view.connectToInspector && view.connectToInspector(rootElement, inspectorIpAddress);
+
+$(#about) << event click {
+  view.msgbox(#information,
+    "This application uses Sciter Engine (https://sciter.com), © Terra Informatica Software, Inc.",
+    "About"
+  );
+}
+
+function updatePrice(inputValues) {
+  var { day, room, numberOfGuests, additionalGuests } = inputValues;
+  var max = 0;
+  switch (room) {
+    case 1: {
+      max = 6;
+      break;
+    } 
+    case 2:
+    case 3: {
+      max = 8;
+      break;
+    }
+  }
+  $(#number-of-guests).attributes["max"] = max;
+  $(#number-of-guests).value = (numberOfGuests > max) ? max : numberOfGuests;
+  $(#additional-guests).state#disabled = ($(#number-of-guests).value.toInteger() < max);
+  if ($(#additional-guests).state#disabled) {
+    additionalGuests = 00.00;
+  }
+
+  var price = 00.00;
+  var priceWithTax = 00.00;
+  var discount = 00.00;
+
+  switch (day) {
+    case "Monday":
+    case "Tuesday":
+    case "Wednesday":
+    case "Thursday": {
+      price = 99.00 + (20.00 * numberOfGuests);
+      break;
+    }
+    case "Friday":
+    case "Saturday": 
+    case "Sunday": {
+      switch (numberOfGuests) {
+        case 1:
+        case 2:
+        case 3: {
+          price = 99.00;
+          break;
+        }
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+        case 8: {
+          switch (room) {
+            case 1: {
+              discount = ([5, 6].indexOf(numberOfGuests) != -1);
+              break;
+            }
+            case 2:
+            case 3: {
+              discount = ([7, 8].indexOf(numberOfGuests) != -1);
+              break;
+            }
+          }
+          price = (numberOfGuests + additionalGuests) * 28.00;
+          break;
+        }
+      }
+      if (discount == true) {
+        discount = 00.20;
+        price -= (price * discount);
+      }
+
+      priceWithTax = price + ((price / 100.00) * 7.00);
+      break;  
+    }
+  }
+
+
+  $(#price).value = "$" + String.printf("%.2f", price);
+  $(#price-with-tax).value = "$" + String.printf("%.2f", priceWithTax);
+
+}
+
+event change $(input, select) (evt) {
+  const day = $(#day).value;
+  const room = $(#room).value.match(/\d+/)[0].toInteger();
+  const numberOfGuests = $(#number-of-guests).value.toInteger();
+  const additionalGuests = $(#additional-guests).value.toInteger();
+
+  updatePrice({ 
+    day: day, 
+    room: room, 
+    numberOfGuests: numberOfGuests, 
+    additionalGuests: additionalGuests
+  });
+}

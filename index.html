@@ -1,0 +1,53 @@
+<html>
+
+  <head>
+    <title>Price Calculator</title>
+    <link href="styles.css" rel="stylesheet">
+    <link href="menu.css" rel="stylesheet">
+    <script src="script.tis"></script>
+    <script src="center.tis"></script>
+  </head>
+
+  <body>
+    <ul #menu-bar>
+      <li>
+        <caption>Help</caption>
+        <menu>
+          <li #about>About</li>
+        </menu>
+      </li>
+    </ul>
+    <div .container>
+      <label>Day</label>
+      <select #day>
+        <option>Sunday</option>
+        <option>Monday</option>
+        <option>Tuesday</option>
+        <option>Wednesday</option>
+        <option>Thursday</option>
+        <option selected>Friday</option>
+        <option>Saturday</option>
+      </select>
+
+      <label>Room</label>
+      <select #room>
+        <option>Room 1</option>
+        <option selected>Room 2</option>
+        <option>Room 3</option>
+      </select>
+
+      <label>Number of Guests</label>
+      <input |integer #number-of-guests value="8" step="1" min="0" />
+
+      <label>Additional Guests</label>
+      <input |integer #additional-guests value="2" step="1" min="0" />
+
+      <label>Price</label>
+      <input |text #price value="$224.00" min="0" readonly/>
+
+      <label>Price with Tax</label>
+      <input |text #price-with-tax value="$293.68" min="0" readonly/>
+    </div>
+  </body>
+
+</html>
